@@ -33,183 +33,70 @@ Auth:
 
 ## 2) Public API — Endpoints (MVP)
 
-### 2.1 Projects / Batches
+### 2.1 Clients
 
-#### Create Batch
-- `POST /api/v1/projects`
-- Scope required:
-  - projects.batch.create
-- Accepts:
-  - project_name
-  - description (optional)
-  - options:
-    - language
-    - output_profile
-    - embed_metadata (bool)
-    - human_review (bool)
-- Returns:
-  - project_id (public)
-  - status
-  - estimated_credits
-- Exposed Fields:
-  - project_id
-  - project_name
-  - status
-  - created_at
-- INTERNAL ONLY (never return):
-  - credits_reserved
-  - internal_flags
-  - cost_breakdown_raw
+#### List Clients
+- `GET /api/v1/clients`
+- Scope: `clients.read`
+- Returns: List of clients (public_id, name, industry, status)
 
-#### Upload Items (Multipart)
-- `POST /api/v1/projects/{project_id}/items`
-- Scope required:
-  - projects.batch.create
-- Accepts:
-  - files[] (multipart)
-  - urls[] (optional)
-- Returns:
-  - accepted_count
-  - rejected_count
-  - items (public ids + status)
-- Exposed Fields:
-  - item_id (public)
-  - filename
-  - status
-- INTERNAL ONLY:
-  - storage_path
-  - internal_processing_ids
+#### Create Client
+- `POST /api/v1/clients`
+- Scope: `clients.create`
+- Accepts: name, industry, web_site
+- Returns: client object with public_id
 
-#### Get Project Status
-- `GET /api/v1/projects/{project_id}`
-- Scope required:
-  - projects.view
-- Returns:
-  - project_id
-  - project_name
-  - status
-  - totals (items, processed, failed)
-- INTERNAL ONLY:
-  - credits_reserved
-  - internal_job_ids
+#### Get Client Detail
+- `GET /api/v1/clients/{public_id}`
+- Scope: `clients.read`
+- Returns: Full client details
+
+#### Update Client
+- `PATCH /api/v1/clients/{public_id}`
+- Scope: `clients.update`
+- Accepts: name, industry, web_site, status
 
 ---
 
-### 2.2 Results / Items
+### 2.2 Contacts
 
-#### List Items
-- `GET /api/v1/projects/{project_id}/items`
-- Scope required:
-  - projects.items.list
-- Returns:
-  - item_id
-  - filename
-  - status
-  - language
-- INTERNAL ONLY:
-  - processing_metadata
-  - confidence_score_raw
+#### List Contacts
+- `GET /api/v1/clients/{client_id}/contacts`
+- Scope: `contacts.read`
+- Returns: List of contacts for the client
 
-#### Get Item Result
-- `GET /api/v1/projects/{project_id}/items/{item_id}`
-- Scope required:
-  - results.view
-- Returns:
-  - item_id
-  - filename
-  - generated_alt_short
-  - generated_long_description
-  - language
-  - status
-  - version (ia | human)
-- INTERNAL ONLY:
-  - internal_model_names
-  - prompt_templates
-  - raw_scores
+#### Create Contact
+- `POST /api/v1/clients/{client_id}/contacts`
+- Scope: `contacts.create`
+- Accepts: first_name, last_name, email, phone, position
+- Returns: contact object
 
 ---
 
-### 2.3 Exports
+### 2.3 Interactions
 
-#### Create Export
-- `POST /api/v1/exports`
-- Scope required:
-  - exports.create
-- Accepts:
-  - project_id
-  - format (json | csv | md | zip)
-- Returns:
-  - export_id
-  - status (queued)
-- INTERNAL ONLY:
-  - storage_bucket
-  - internal_job_id
+#### List Interactions
+- `GET /api/v1/clients/{client_id}/interactions`
+- Scope: `interactions.read`
+- Returns: Timeline of interactions
 
-#### Get Export Status
-- `GET /api/v1/exports/{export_id}`
-- Scope required:
-  - exports.view
-- Returns:
-  - export_id
-  - status
-  - format
-  - created_at
-
-#### Download Export
-- `GET /api/v1/exports/{export_id}/download`
-- Scope required:
-  - exports.download
-- Returns:
-  - signed_url (short-lived)
-- INTERNAL ONLY:
-  - direct storage URLs
-  - bucket names
+#### Create Interaction
+- `POST /api/v1/clients/{client_id}/interactions`
+- Scope: `interactions.create`
+- Accepts: content, type
+- Returns: interaction object
+- Note: Immutable once created.
 
 ---
 
-### 2.4 Human Review (Client API)
-
-#### Request Review
-- `POST /api/v1/reviews`
-- Scope required:
-  - review.request.create
-- Accepts:
-  - project_id
-  - item_ids[] (optional)
-  - priority (optional)
-- Returns:
-  - review_request_id
-  - status
-  - estimated_additional_credits
-- INTERNAL ONLY:
-  - reviewer_assignment
-  - internal SLA calculations
-
-#### Get Review Status
-- `GET /api/v1/reviews/{review_request_id}`
-- Scope required:
-  - review.request.view
-- Returns:
-  - review_request_id
-  - status
-  - counts (pending/approved/returned)
-  - sla_due_at
-
 ---
 
-### 2.5 API Usage & Quotas
+### 2.4 API Usage & Quotas
 
 #### Usage Summary
 - `GET /api/v1/usage`
-- Scope required:
-  - api.usage.view
-- Returns:
-  - credits_remaining
-  - credits_used_this_month
-  - jobs_count
-- INTERNAL ONLY:
-  - ledger entries
-  - cost breakdown per model/provider
+- Scope required: `usage.view`
+- Returns: active_users, clients_count, interactions_last_30d
 
 ---
 
@@ -229,10 +116,9 @@ Rules:
 ## 4) Webhooks (Outbound)
 
 Supported events:
-- project.completed
-- project.failed
-- export.ready
-- review.completed
+- client.created
+- contact.created
+- interaction.created
 
 Payload (public fields only):
 - event_type

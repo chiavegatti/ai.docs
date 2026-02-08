@@ -7,8 +7,7 @@ even when a user has access to a screen.
 Roles:
 - COMPANY_OWNER
 - COMPANY_ADMIN
-- COMPANY_OPERATOR
-- REVIEWER
+- COMPANY_USER
 - PLATFORM_ADMIN
 
 Rules:
@@ -32,17 +31,14 @@ Rules:
 - status (active/suspended)
 
 ### Visibility
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| company_name | Yes | Yes | Yes | Limited* | Yes |
-| primary_contact_email | Yes | Yes | No | No | Yes |
-| billing_contact_email | Yes | Yes | No | No | Yes |
-| default_language | Yes | Yes | View-only | No | Yes |
-| output_profile_defaults | Yes | Yes | View-only | No | Yes |
-| status | Yes | Yes | Yes | Limited* | Yes |
-| company_id | No (UI) | No (UI) | No (UI) | No | Yes |
-
-*Reviewer: may see company_name and status only as needed for queue context (no contacts).
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| company_name | Yes | Yes | Yes | Yes |
+| primary_contact_email | Yes | Yes | No | Yes |
+| billing_contact_email | Yes | Yes | No | Yes |
+| default_language | Yes | Yes | View-only | Yes |
+| status | Yes | Yes | Yes | Yes |
+| company_id | No (UI) | No (UI) | No (UI) | Yes |
 
 ---
 
@@ -58,139 +54,86 @@ Rules:
 - status (active/invited/disabled)
 
 ### Visibility
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| name | Yes | Yes | Yes (read-only list) | No | Yes |
-| email | Yes | Yes | No | No | Yes |
-| role | Yes | Yes | Yes (read-only) | No | Yes |
-| last_login_at | Yes | Yes | No | No | Yes |
-| invited_at | Yes | Yes | No | No | Yes |
-| status | Yes | Yes | Yes (read-only) | No | Yes |
-| user_id | No (UI) | No (UI) | No (UI) | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| name | Yes | Yes | Yes (list) | Yes |
+| email | Yes | Yes | No | Yes |
+| role | Yes | Yes | Yes | Yes |
+| last_login_at | Yes | Yes | No | Yes |
+| invited_at | Yes | Yes | No | Yes |
+| status | Yes | Yes | Yes | Yes |
+| user_id | No (UI) | No (UI) | No (UI) | Yes |
 
 Notes:
-- Operators can view team list but should not see emails or privileged metadata.
+- Regular users can view team list but should not see emails or sensitive metadata.
 
 ---
 
-## 3) Projects / Batches
+## 3) Clients
 
 ### Fields
-- project_id
-- company_id
-- project_name
-- description
-- created_by (user reference)
-- created_at
-- status (queued/processing/done/error)
-- total_items
-- processed_items
-- failed_items
-- credits_estimated
-- credits_reserved
-- credits_final
-- flags (ocr_enabled, embed_metadata_enabled, human_review_requested)
-
-### Visibility
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| project_name | Yes | Yes | Yes | Limited* | Yes |
-| description | Yes | Yes | Yes | Limited* | Yes |
-| created_by | Yes | Yes | No | No | Yes |
-| created_at | Yes | Yes | Yes | Limited* | Yes |
-| status | Yes | Yes | Yes | Limited* | Yes |
-| totals (items/progress) | Yes | Yes | Yes | Limited* | Yes |
-| credits_* | Yes | Yes | Limited** | No | Yes |
-| flags | Yes | Yes | Yes | Limited* | Yes |
-| project_id | No (UI) | No (UI) | No (UI) | No | Yes |
-
-*Reviewer sees only what’s necessary: project_name, status, created_at, priority/SLA related.
-**Operator: may see credits_estimated (before processing) and credits_final for awareness, but not ledger-level detail.
-
----
-
-## 4) Assets / Items (Images)
-
-### Fields
-- item_id
-- project_id
-- filename
-- filesize
-- mimetype
-- image_preview_url (signed)
-- status
-- error_reason (sanitized)
-- generated_alt_short
-- generated_long_description
-- language
-- confidence_score (internal)
-- processing_metadata (internal)
+- client_id (internal)
+- public_id
+- name
+- industry
+- web_site
+- status (active/archived)
 - created_at
 - updated_at
 
 ### Visibility
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| filename | Yes | Yes | Yes | Yes | Yes |
-| preview_url | Yes | Yes | Yes | Yes | Yes |
-| status | Yes | Yes | Yes | Yes | Yes |
-| error_reason | Yes | Yes | Yes (sanitized) | Yes (sanitized) | Yes |
-| generated_alt_short | Yes | Yes | Yes | Yes | Yes |
-| generated_long_description | Yes | Yes | Yes | Yes | Yes |
-| language | Yes | Yes | Yes | Yes | Yes |
-| confidence_score | Yes (optional UI) | Yes (optional UI) | No | Limited* | Yes |
-| processing_metadata | No | No | No | No | Yes |
-| item_id | No (UI) | No (UI) | No (UI) | No (UI) | Yes |
-
-*Reviewer may see a simplified confidence indicator or “needs attention” label, not raw internals.
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| name | Yes | Yes | Yes | Yes |
+| industry | Yes | Yes | Yes | Yes |
+| web_site | Yes | Yes | Yes | Yes |
+| status | Yes | Yes | Yes | Yes |
+| created_at | Yes | Yes | Yes | Yes |
+| public_id | Yes | Yes | Yes | Yes |
 
 ---
 
-## 5) Human Review (Requests + Review Actions)
+## 4) Contacts
 
-### 5.1 Review Requests (Client View)
-Fields:
-- review_request_id
-- project_id
-- requested_by
-- requested_at
-- priority
-- status
-- items_count
-- cost_credits
-- sla_due_at
+### Fields
+- contact_id
+- client_id
+- first_name
+- last_name
+- email
+- phone
+- position
+- created_at
 
-Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| requested_by | Yes | Yes | No | No | Yes |
-| requested_at | Yes | Yes | Yes | Yes (queue context) | Yes |
-| priority/status/items_count | Yes | Yes | Yes | Yes | Yes |
-| cost_credits | Yes | Yes | Limited* | No | Yes |
-| sla_due_at | Yes | Yes | Yes | Yes | Yes |
-| review_request_id | No (UI) | No (UI) | No (UI) | No (UI) | Yes |
+### Visibility
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| first_name | Yes | Yes | Yes | Yes |
+| last_name | Yes | Yes | Yes | Yes |
+| email | Yes | Yes | Yes | Yes |
+| phone | Yes | Yes | Yes | Yes |
+| position | Yes | Yes | Yes | Yes |
+| created_at | Yes | Yes | Yes | Yes |
 
-*Operator can see cost summary for the request but not billing/ledger detail.
+---
 
-### 5.2 Reviewer Actions (Reviewer View)
-Fields:
-- reviewer_id (internal)
-- assigned_at
-- started_at
-- completed_at
-- reviewer_comments
-- decision (approved/returned)
-- versions (IA → human)
+## 5) Interactions (Notes)
 
-Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| reviewer_comments | Yes | Yes | Yes (read-only) | Yes | Yes |
-| decision + timestamps | Yes | Yes | Yes | Yes | Yes |
-| reviewer_identity | Limited** | Limited** | No | Yes (self) | Yes |
-| versions | Yes | Yes | Yes | Yes | Yes |
+### Fields
+- interaction_id
+- client_id
+- author_id
+- content (note)
+- type (call/email/meeting/note)
+- created_at
 
-**Owner/Admin may see “reviewed by: internal reviewer” or reviewer ID masked; do not show personal identity unless contract requires.
+### Visibility
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| content | Yes | Yes | Yes | Yes |
+| type | Yes | Yes | Yes | Yes |
+| author_id | Yes | Yes | Yes | Yes |
+| created_at | Yes | Yes | Yes | Yes |
 
 ---
 
@@ -207,13 +150,13 @@ Visibility:
 - full_secret (only once)
 
 Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| token_name/scopes/status | Yes | Yes | No | No | Yes |
-| token_prefix (masked) | Yes | Yes | No | No | Yes |
-| last_used_at | Yes | Yes | No | No | Yes |
-| full_secret | Only once on creation | Only once on creation | No | No | Yes |
-| token_id | No (UI) | No (UI) | No | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| token_name/scopes/status | Yes | Yes | No | Yes |
+| token_prefix (masked) | Yes | Yes | No | Yes |
+| last_used_at | Yes | Yes | No | Yes |
+| full_secret | Only once | Only once | No | Yes |
+| token_id | No (UI) | No (UI) | No | Yes |
 
 ### Webhooks Fields
 - webhook_id
@@ -225,11 +168,11 @@ Visibility:
 - last_status
 
 Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| url/events/status | Yes | Yes | No | No | Yes |
-| secret (masked) | Yes | Yes | No | No | Yes |
-| delivery logs (summary) | Yes | Yes | No | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| url/events/status | Yes | Yes | No | Yes |
+| secret (masked) | Yes | Yes | No | Yes |
+| delivery logs (summary) | Yes | Yes | No | Yes |
 
 ---
 
@@ -246,14 +189,14 @@ Visibility:
 - chargebacks/refunds
 
 Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| packs purchased (summary) | Yes | Yes | Limited* | No | Yes |
-| invoices/transactions | Yes | Yes | No | No | Yes |
-| payment_method (masked) | Yes | Yes | No | No | Yes |
-| billing_address/tax_id | Yes | Yes | No | No | Yes |
-| chargebacks/refunds | Yes | Yes | No | No | Yes |
-| provider customer_id | No (UI) | No (UI) | No | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| packs purchased (summary) | Yes | Yes | No | Yes |
+| invoices/transactions | Yes | Yes | No | Yes |
+| payment_method (masked) | Yes | Yes | No | Yes |
+| billing_address/tax_id | Yes | Yes | No | Yes |
+| chargebacks/refunds | Yes | Yes | No | Yes |
+| provider customer_id | No (UI) | No (UI) | No | Yes |
 
 ### Credit Ledger Fields
 - ledger_entry_id
@@ -266,12 +209,12 @@ Visibility:
 - idempotency_key
 
 Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| amount/type/reason/date | Yes | Yes | No | No | Yes |
-| resource references | Yes | Yes | No | No | Yes |
-| actor_id | Limited** | Limited** | No | No | Yes |
-| idempotency_key | No | No | No | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| amount/type/reason/date | Yes | Yes | No | Yes |
+| resource references | Yes | Yes | No | Yes |
+| actor_id | Limited** | Limited** | No | Yes |
+| idempotency_key | No | No | No | Yes |
 
 *Operator may see high-level “credits remaining” and job estimated cost, not ledger entries.
 **Mask actor identity where appropriate; show “system” / “admin action” without exposing personal data unnecessarily.
@@ -291,11 +234,11 @@ Fields:
 - metadata (reason)
 
 Visibility:
-| Field | OWNER | ADMIN | OPERATOR | REVIEWER | PLATFORM_ADMIN |
-|------|-------|-------|----------|----------|----------------|
-| tenant-level audit view | Yes | Yes | No | No | Yes |
-| actor identity | Limited* | Limited* | No | No | Yes |
-| metadata | Yes (sanitized) | Yes (sanitized) | No | No | Yes |
+| Field | OWNER | ADMIN | USER | PLATFORM_ADMIN |
+|------|-------|-------|------|----------------|
+| tenant-level audit view | Yes | Yes | No | Yes |
+| actor identity | Limited* | Limited* | No | Yes |
+| metadata | Yes (sanitized) | Yes (sanitized) | No | Yes |
 
 *For tenant audit logs, avoid exposing personal reviewer identity; keep privacy-friendly.
 

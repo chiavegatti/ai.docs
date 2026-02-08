@@ -38,11 +38,11 @@ Recommended structure:
 
 ai.docs/ux-ui/
 ├── routes.md
-├── access-control-matrix.md
-├── screen-permission-mapping.md
-├── data-visibility-matrix.md
-├── api-exposure-matrix.md
-└── wireframes/ # optional
+├── ux-matrix.md
+└── governance/
+    ├── access-control-matrix.md
+    ├── data-visibility-matrix.md
+    └── api-exposure-matrix.md
 
 
 Each file has a specific role described below.
@@ -74,7 +74,7 @@ Roles are defined in:
 - `03_PRD.md`
 
 UX enforcement rules are defined in:
-- `ai.docs/ux-ui/access-control-matrix.md`
+- `ai.docs/ux-ui/governance/access-control-matrix.md`
 
 This matrix MUST define:
 - which roles can access which screens
@@ -88,7 +88,7 @@ Each screen MUST be mapped to:
 - required permissions
 - allowed actions (view, create, edit, delete)
 
-This mapping is documented in: ai.docs/ux-ui/screen-permission-mapping.md
+This mapping is documented in: ai.docs/ux-ui/ux-matrix.md
 
 No screen may expose an action without an explicit permission rule.
 
@@ -98,7 +98,7 @@ No screen may expose an action without an explicit permission rule.
 
 UX MUST respect data visibility constraints.
 
-Data visibility rules are documented in: ai.docs/ux-ui/data-visibility-matrix.md
+Data visibility rules are documented in: ai.docs/ux-ui/governance/data-visibility-matrix.md
 
 
 This matrix defines:
@@ -116,7 +116,7 @@ Every screen MUST be backed by:
 - at least one documented API endpoint
 - a clear API exposure rule
 
-This relationship is documented in: ai.docs/ux-ui/api-exposure-matrix.md
+This relationship is documented in: ai.docs/ux-ui/governance/api-exposure-matrix.md
 
 
 UX must not call undocumented APIs.

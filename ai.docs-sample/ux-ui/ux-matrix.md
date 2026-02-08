@@ -260,3 +260,49 @@ Rules:
 - UI must not infer permissions from roles
 - UI must not allow cross-client navigation by manipulating IDs
 - All permission checks must be explicit and deterministic
+
+## Module: Interactions
+
+This section defines all UI actions related to recording and viewing interactions within a client context.
+Interactions are immutable once created, as defined in `03_PRD.md`.
+
+---
+
+### Screen: Interactions List
+Route: `/app/clients/{clientId}/interactions`
+
+| Action | Permission | Notes |
+|------|-----------|-------|
+| View interactions timeline | interaction:view | Required to access the screen |
+| Filter interactions | interaction:view | Filter by date or author |
+| Create interaction | interaction:create | Controls visibility of "New Note" CTA |
+
+Rules:
+- Without `interaction:view`, access to this route is forbidden (403)
+- Interactions are always client-scoped
+- Data visibility follows `data-visibility-matrix.md`
+
+---
+
+### Screen: Interaction Form (Create)
+Route: `/app/clients/{clientId}/interactions/new`
+
+| Action | Permission | Notes |
+|------|-----------|-------|
+| Access creation form | interaction:create | Required to access the screen |
+| Submit interaction | interaction:create | Final submission (immutable) |
+
+Rules:
+- Without `interaction:create`, route access is forbidden (403)
+- Author is automatically set to the current user
+- Timestamp is automatically set by the system
+- Once submitted, interactions cannot be edited or deleted (functional constraint)
+
+---
+
+### Global Interactions Rules
+
+- Interactions are tenant-scoped and client-scoped
+- Interactions are immutable once created
+- UI must not provide any edit or delete affordances for interactions
+- All permission checks must be explicit and deterministic

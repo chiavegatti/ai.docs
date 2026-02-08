@@ -97,24 +97,23 @@ Notes:
 - `{contactId}` refers to `contacts.public_id`
 - Contacts MUST be tenant-scoped and client-scoped
 - Actions are governed by `ux-matrix.md` and governance matrices
-
 ---
 
-## 5) Review Routes (`/review`)
-
-Used for approval or verification flows.
+### 4.4 Interactions (Client-scoped)
 
 | Route | Description |
 |------|-------------|
-| `/review/clients/{clientId}` | Client review screen |
+| `/app/clients/{clientId}/interactions` | Interactions timeline |
+| `/app/clients/{clientId}/interactions/new` | Create interaction |
 
-Rules:
-- Read-only by default
-- Actions (if any) must be explicitly defined in `ux-matrix.md`
+Notes:
+- `{clientId}` refers to `clients.public_id`
+- Interactions are immutable once created.
+- Access governed by `ux-matrix.md` and `access-control-matrix.md`.
 
 ---
 
-## 6) Administrative Routes (`/admin`)
+## 5) Administrative Routes (`/admin`)
 
 Administrative routes are restricted to privileged roles.
 
