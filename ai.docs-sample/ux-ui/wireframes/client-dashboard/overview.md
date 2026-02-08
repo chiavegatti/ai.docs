@@ -1,36 +1,34 @@
 # Client Dashboard — Overview (Wireframe)
 
 ## Objetivo da Tela
-Fornecer uma visão rápida e acionável do uso da plataforma pela empresa (cliente B2B).
+Fornecer uma visão rápida e acionável da carteira de clientes, interações recentes e saúde das contas.
 
 ## Usuários
 - Owner/Admin da Empresa
-- Operador da Empresa
+- Usuário da Empresa
 
 ## Blocos da Tela (Hierarquia Visual)
 1. Header
    - Nome da empresa
-   - Saldo de créditos atual
-   - CTA: Comprar créditos
-2. Cards de Status
-   - Card: Jobs em andamento
-   - Card: Jobs finalizados (últimos 7 dias)
-   - Card: Uso do mês (volume processado + créditos consumidos)
-3. Lista de Projetos/Lotes Recentes
-   - Tabela com: Nome do lote, Status, Qtd. imagens, Criado em, Ações
-4. CTA Primário
-   - Botão: Criar novo lote (batch upload)
-5. Atalhos Rápidos
-   - Acessar API Tokens
-   - Ver histórico de cobranças
-   - Convidar usuário
+   - Total de clientes ativos
+   - CTA: Novo Cliente
+2. Cards de Status (Métricas)
+   - Card: Interações nos últimos 7 dias
+   - Card: Novos contatos adicionados (mês atual)
+   - Card: Clientes sem contato há mais de 30 dias
+3. Lista de Interações Recentes (Timeline)
+   - Tabela/Feed com: Cliente, Tipo (Ligação/Email/Nota), Autor, Data/Hora, Resumo (Snippet)
+4. Atalhos Rápidos
+   - Ver todos os clientes
+   - Adicionar nota rápida
+   - Convidar novo colega de equipe
 
 ## Estados da Tela
 - Empty State:
-  - Mensagem: "Nenhum lote criado ainda"
-  - CTA: Criar primeiro lote
+  - Mensagem: "Nenhum cliente cadastrado"
+  - CTA: Adicionar meu primeiro cliente
 - Loading State:
-  - Skeleton para cards e tabela
+  - Skeleton para cards e timeline
 - Error State:
   - Mensagem clara + ação de retry
 
@@ -41,6 +39,6 @@ Fornecer uma visão rápida e acionável do uso da plataforma pela empresa (clie
 - Estados de loading anunciados via aria-live
 
 ## Eventos/Interações
-- Clique em "Criar novo lote" abre fluxo de batch upload
-- Clique em lote abre detalhes/resultados
-- Clique em "Comprar créditos" redireciona para billing
+- Clique em "Novo Cliente" abre formulário de criação
+- Clique em interação abre o detalhe do cliente/contato
+- Clique em "Ver todos os clientes" redireciona para a lista de clientes

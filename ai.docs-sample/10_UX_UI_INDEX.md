@@ -39,6 +39,12 @@ Recommended structure:
 ai.docs/ux-ui/
 ├── routes.md
 ├── ux-matrix.md
+├── wireframes/
+│   ├── client-dashboard/
+│   ├── clients/
+│   ├── contacts/
+│   ├── interactions/
+│   └── admin/
 └── governance/
     ├── access-control-matrix.md
     ├── data-visibility-matrix.md
@@ -63,6 +69,23 @@ Each route MUST specify:
 - associated API endpoints
 
 No route may exist without an entry in `routes.md`.
+
+---
+
+### 4.2 Screen Wireframes (Functional Layout)
+
+Every route MUST be documented as a wireframe in: `ai.docs/ux-ui/wireframes/`
+
+Standard documentation format inside each screen folder:
+- `list.md`: List/Table views
+- `details.md`: Full detail views
+- `form.md`: Creation and Edit forms
+
+Wireframes define:
+- layout hierarchy
+- UI states (Empty, Loading, Error)
+- accessibility requirements
+- interaction events
 
 ---
 

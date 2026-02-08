@@ -32,10 +32,10 @@ This screen is the primary entry point for client management.
 Access to this screen is governed by `ux-matrix.md`.
 
 Typical roles:
-- Admin
-- Manager
-- Sales
-- Read-only (limited visibility)
+- COMPANY_OWNER
+- COMPANY_ADMIN
+- COMPANY_USER
+- PLATFORM_ADMIN (read-only monitoring)
 
 Behavior varies by permission.
 
