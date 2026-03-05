@@ -74,6 +74,18 @@ All documents below live inside the **`ai.docs/` directory**:
 
 ---
 
+## CI Documentation Gate
+
+To ensure our living contracts and diagrams do not become outdated (a "guess generator"), we have integrated a **CI Gate in GitHub Actions**.
+
+Before any merge into the `main` branch, it is mandatory to:
+- Fill out the **Pull Request Template**, checking whether the **Documentation was updated** (covering `docs/c4`, `docs/adr`, `docs/prd`, `docs/api`, and `docs/schema`) or if the change **does not require documentation**.
+- The **Docs CI Gate** workflow will automatically fail and block the merge if no documentation option is validated in the Pull Request body.
+
+We are starting "small", focusing on traceability and expanding as the pain appears.
+
+---
+
 ## Important principles
 
 - Documentation comes **before** code.
