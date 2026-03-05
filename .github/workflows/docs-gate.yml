@@ -1,0 +1,37 @@
+name: Docs CI Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited, reopened]
+    branches:
+      - main
+      - master
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Documentation Checklist
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "Checking PR Body for the Docs Gate checklist..."
+          
+          # We look for the checked boxes using regex
+          # [x] **Documentação atualizada**
+          # [x] **Documentação não requerida**
+          
+          UPDATED=$(echo "$PR_BODY" | grep -E -i "^-\s*\[[xX]\]\s*\*\*Documentação atualizada\*\*" || true)
+          NOT_REQUIRED=$(echo "$PR_BODY" | grep -E -i "^-\s*\[[xX]\]\s*\*\*Documentação não requerida\*\*" || true)
+          
+          if [ -n "$UPDATED" ]; then
+            echo "Success: Documentation updated option selected."
+            exit 0
+          elif [ -n "$NOT_REQUIRED" ]; then
+            echo "Success: Documentation not required option selected."
+            exit 0
+          else
+            echo "Error: You must check either 'Documentação atualizada' or 'Documentação não requerida' in the PR description."
+            echo "This is required to pass the Docs CI Gate."
+            exit 1
+          fi
