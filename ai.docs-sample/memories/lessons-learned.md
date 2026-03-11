@@ -54,5 +54,6 @@ This file is **append-only**.
 
 (Add new items below as they emerge)
 
-- YYYY-MM-DD — Short rule describing the learning.
-- YYYY-MM-DD — Short rule describing the learning.
+- 2026-03-11 — File Consolidation: Use high-density files (7-file model) to prevent AI context fragmentation and improve state maintenance.
+- 2026-03-11 — Constraints First: Move "Notes for AI" and "Strict Constraints" to the TOP of documents to ensure they are read before the content.
+
